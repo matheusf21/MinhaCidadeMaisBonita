@@ -1,2 +1,3 @@
-# MinhaCidadeMaisBonita
-Aplicativo mobile para relato e acompanhamento de ocorrências urbanas com autenticação de usuários.
+npm install
+npx expo start --clear
+npm run validate
