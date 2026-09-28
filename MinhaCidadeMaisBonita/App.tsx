@@ -26,6 +26,7 @@ import {
   ScreenName,
   UrbanOccurrence,
 } from "./src/types";
+
 export default function App() {
   return (
     <SafeAreaProvider>
@@ -36,6 +37,7 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
+
 function Application() {
   const {
     user,
@@ -51,12 +53,14 @@ function Application() {
   const [selected, setSelected] = useState<UrbanOccurrence | null>(null);
   const [loading, setLoading] = useState(true);
   const [returnAfterAuth, setReturnAfterAuth] = useState<ScreenName>("HOME");
+
   useEffect(() => {
     loadCity().then((value) => {
       setCity(value);
       setLoading(false);
     });
   }, []);
+
   async function refresh(value = city) {
     if (!value || !configured) return;
     try {
@@ -73,38 +77,44 @@ function Application() {
       );
     }
   }
+
   useEffect(() => {
     void refresh();
   }, [city]);
+
   useEffect(() => {
     if (recoveryRequested) {
       setScreen("RESET_PASSWORD");
       clearRecoveryRequest();
     }
   }, [recoveryRequested]);
+
   function requireAuth(target: ScreenName) {
     if (user) return setScreen(target);
     setReturnAfterAuth(target);
     setAuthMode("LOGIN");
     setScreen("AUTH");
   }
+
   if (loading || authLoading)
     return (
       <SafeAreaView style={s.loading}>
         <Text style={s.white}>Preparando sua cidade...</Text>
       </SafeAreaView>
     );
+
   if (!configured)
     return (
       <SafeAreaView style={s.loading}>
         <Text style={s.white}>Supabase não configurado.</Text>
       </SafeAreaView>
     );
+
   return (
     <View style={s.app}>
       {screen === "WELCOME" && (
         <WelcomeScreen onContinue={() => setScreen(city ? "HOME" : "CITY")} />
-      )}{" "}
+      )}
       {screen === "CITY" && (
         <CityScreen
           initial={city}
@@ -115,7 +125,7 @@ function Application() {
             setScreen("HOME");
           }}
         />
-      )}{" "}
+      )}
       {screen === "HOME" && city && (
         <HomeScreen
           city={city}
@@ -126,7 +136,7 @@ function Application() {
           onNavigate={setScreen}
           onAuth={() => setScreen(user ? "ACCOUNT" : "AUTH")}
         />
-      )}{" "}
+      )}
       {screen === "AUTH" && (
         <AuthScreen
           mode={authMode}
@@ -143,13 +153,13 @@ function Application() {
             setScreen("PRIVACY");
           }}
         />
-      )}{" "}
+      )}
       {screen === "FORGOT_PASSWORD" && (
         <ForgotPasswordScreen onBack={() => setScreen("AUTH")} />
-      )}{" "}
+      )}
       {screen === "RESET_PASSWORD" && (
         <ResetPasswordScreen onFinished={() => setScreen("AUTH")} />
-      )}{" "}
+      )}
       {screen === "TERMS" && (
         <LegalDocumentScreen
           document="TERMS"
@@ -158,7 +168,7 @@ function Application() {
             setScreen("AUTH");
           }}
         />
-      )}{" "}
+      )}
       {screen === "PRIVACY" && (
         <LegalDocumentScreen
           document="PRIVACY"
@@ -167,13 +177,13 @@ function Application() {
             setScreen("AUTH");
           }}
         />
-      )}{" "}
+      )}
       {screen === "ACCOUNT" && (
         <AccountScreen
           onBack={() => setScreen("HOME")}
           onDeleted={() => setScreen("WELCOME")}
         />
-      )}{" "}
+      )}
       {screen === "REPORT" && city && (
         <ReportScreen
           city={city}
@@ -183,7 +193,7 @@ function Application() {
             setScreen("ACTIVE");
           }}
         />
-      )}{" "}
+      )}
       {screen === "ACTIVE" && (
         <OccurrenceListScreen
           title="Problemas ativos"
@@ -194,7 +204,7 @@ function Application() {
             setScreen("DETAIL");
           }}
         />
-      )}{" "}
+      )}
       {screen === "RESOLVED" && (
         <OccurrenceListScreen
           title="Problemas resolvidos"
@@ -206,7 +216,7 @@ function Application() {
             setScreen("DETAIL");
           }}
         />
-      )}{" "}
+      )}
       {screen === "DETAIL" && selected && (
         <DetailScreen
           item={selected}
@@ -225,6 +235,7 @@ function Application() {
     </View>
   );
 }
+
 const s = StyleSheet.create({
   app: { flex: 1 },
   loading: {
